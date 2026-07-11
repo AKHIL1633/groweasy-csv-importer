@@ -1,0 +1,67 @@
+# Local-dev convenience only — does not change the actual deployment targets
+# (Vercel for apps/web, Railway/Render for apps/api; see
+# docs/11-deployment-plan.md and README.md's Deployment section). Both
+# platforms support deploying straight from these Dockerfiles if that path
+# is preferred over their native buildpacks.
+#
+# Usage:
+#   cp .env.example .env   # fill in GEMINI_API_KEY
+#   docker compose up --build
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      ALLOWED_ORIGIN: http://localhost:3000
+      AI_BATCH_MAX_RETRIES: ${AI_BATCH_MAX_RETRIES:-2}
+      AI_BATCH_CONCURRENCY: ${AI_BATCH_CONCURRENCY:-3}
+      AI_REQUEST_TIMEOUT_MS: ${AI_REQUEST_TIMEOUT_MS:-60000}
+      AI_RETRY_BASE_DELAY_MS: ${AI_RETRY_BASE_DELAY_MS:-500}
+      AI_RETRY_MAX_DELAY_MS: ${AI_RETRY_MAX_DELAY_MS:-8000}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://127.0.0.1:4000/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        # The browser calls this URL directly, so it must be reachable from
+        # the host, not the Docker network — hence localhost, not
+        # http://api:4000 (baked in at build time, same as any Next.js
+        # NEXT_PUBLIC_* var).
+        NEXT_PUBLIC_API_URL: http://localhost:4000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://127.0.0.1:3000/',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

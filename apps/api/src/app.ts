@@ -22,7 +22,12 @@ export function createApp(): Express {
   // handler (so real routes get a chance to match first), and the error
   // handler last — Express only routes a thrown/next(err) error to handlers
   // registered after the point where it occurred.
-  app.use(cors({ origin: env.ALLOWED_ORIGIN.split(",") }));
+  // Each entry trimmed individually too — a multi-origin list like
+  // "a.com, b.com" has a leading space on the second entry otherwise, the
+  // same class of invisible-whitespace bug env.ts's own .trim() only
+  // catches on the outer string, not per comma-separated piece.
+  const allowedOrigins = env.ALLOWED_ORIGIN.split(",").map((origin) => origin.trim());
+  app.use(cors({ origin: allowedOrigins }));
   app.use(securityHeadersMiddleware);
   app.use(requestIdMiddleware);
   app.use(requestLoggerMiddleware);

@@ -53,8 +53,12 @@ const envSchema = z
     // and docs/11-deployment-plan.md §4. Never a wildcard. No default here:
     // defaulting to localhost would let a production deploy silently boot
     // with CORS that can never match the real frontend origin instead of
-    // failing loudly, which is enforced below instead.
-    ALLOWED_ORIGIN: z.string().min(1).optional(),
+    // failing loudly, which is enforced below instead. .trim() matters in
+    // practice, not just in theory: a Railway deploy once had this value
+    // saved with a trailing newline (invisible in the dashboard UI), which
+    // silently broke every CORS check via exact string mismatch against the
+    // real Origin header — a value that "looks right" isn't good enough.
+    ALLOWED_ORIGIN: z.string().trim().min(1).optional(),
   })
   .superRefine((data, ctx) => {
     if (data.NODE_ENV === "production" && !data.ALLOWED_ORIGIN) {

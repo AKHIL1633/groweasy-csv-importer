@@ -317,7 +317,7 @@ application code assumes `localhost`.
 
 Pre-submission checklist:
 
-- [ ] Frontend hosted URL completes a full upload → import → results cycle against the
+- [x] Frontend hosted URL completes a full upload → import → results cycle against the
       **real, deployed** backend (not local).
 - [x] Backend `GET /api/health` reachable directly at its public URL.
 - [x] `GEMINI_API_KEY` set on the host's dashboard, never in a committed file.

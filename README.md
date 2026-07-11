@@ -13,13 +13,13 @@ upload → parse → validate → AI-extract → respond request/response cycle.
 
 ## Screenshots
 
-> _Add screenshots here before sharing this repo — e.g. `docs/screenshots/upload.png`,
-> `docs/screenshots/loading.png`, `docs/screenshots/results.png`,
-> `docs/screenshots/dark-mode.png`. None are committed yet._
+| Upload (drag & drop)                                                        | Import in progress                                                                       |
+| :-------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------- |
+| ![Upload screen with drag-and-drop dropzone](./docs/screenshots/upload.png) | ![Import in progress with the honest progress indicator](./docs/screenshots/loading.png) |
 
-| Upload (drag & drop) | Import in progress |   Results    |  Dark mode   |
-| :------------------: | :----------------: | :----------: | :----------: |
-|     _screenshot_     |    _screenshot_    | _screenshot_ | _screenshot_ |
+| Results                                                                             | Dark mode                                                                |
+| :---------------------------------------------------------------------------------- | :----------------------------------------------------------------------- |
+| ![Import results with imported and skipped records](./docs/screenshots/results.png) | ![The same upload screen in dark mode](./docs/screenshots/dark-mode.png) |
 
 ---
 

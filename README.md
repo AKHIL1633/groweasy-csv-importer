@@ -9,6 +9,10 @@ dark mode.
 No database, no auth, no job queue — everything happens in one stateless
 upload → parse → validate → AI-extract → respond request/response cycle.
 
+**Live**: [groweasy-csv-importer-web-ten.vercel.app](https://groweasy-csv-importer-web-ten.vercel.app)
+(frontend, Vercel) · [API health check](https://groweasy-csv-importer-production-8a7e.up.railway.app/api/health)
+(backend, Railway)
+
 ---
 
 ## Screenshots
@@ -306,14 +310,20 @@ dashboard — **`ALLOWED_ORIGIN` must be set to the exact deployed Vercel URL**
 (`NEXT_PUBLIC_API_URL`, `ALLOWED_ORIGIN`) is environment-variable-driven; nothing in
 application code assumes `localhost`.
 
+**Currently deployed at**:
+
+- Frontend (Vercel): https://groweasy-csv-importer-web-ten.vercel.app
+- Backend (Railway): https://groweasy-csv-importer-production-8a7e.up.railway.app
+
 Pre-submission checklist:
 
 - [ ] Frontend hosted URL completes a full upload → import → results cycle against the
       **real, deployed** backend (not local).
-- [ ] Backend `GET /api/health` reachable directly at its public URL.
-- [ ] `GEMINI_API_KEY` set on the host's dashboard, never in a committed file.
-- [ ] `ALLOWED_ORIGIN` matches the deployed frontend's exact origin.
-- [ ] `NEXT_PUBLIC_API_URL` matches the deployed backend's exact origin.
+- [x] Backend `GET /api/health` reachable directly at its public URL.
+- [x] `GEMINI_API_KEY` set on the host's dashboard, never in a committed file.
+- [x] `ALLOWED_ORIGIN` matches the deployed frontend's exact origin (confirmed via a real
+      CORS preflight against the live backend).
+- [x] `NEXT_PUBLIC_API_URL` matches the deployed backend's exact origin.
 
 ---
 
